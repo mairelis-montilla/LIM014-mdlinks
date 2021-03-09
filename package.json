@@ -11,7 +11,8 @@
     "eslint": "eslint --ext .js src/ test/",
     "pretest": "npm run eslint",
     "deploy": "gh-pages -d src",
-    "start": " nodemon ./src/index.js"
+    "start": "node ./src/index.js",
+    "startN" : "nodemon ./src/index.js"
   },
   "repository": {
     "type": "git",
