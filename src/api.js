@@ -1,21 +1,16 @@
 const path = require('path');
 const fs = require('fs');
 
-const ValidatePath = (pathAbsolute) => {
-  try {
+const pathResolve = (paths) => (path.isAbsolute(paths) ? paths : path.resolve(paths));
+const validatePath = (pathAbsolute) => fs.existsSync(pathAbsolute);
+
+module.exports = {
+  pathResolve,
+  validatePath,
+};
+/*  try {
     const validate = fs.readdirSync(pathAbsolute);
     return validate;
   } catch (error) {
     return 'invalid path';
-  }
-};
-
-const pathResolve = (paths) => {
-  const isAbsolute = path.isAbsolute(paths);
-  return isAbsolute ? paths : path.resolve(paths);
-};
-
-module.exports = {
-  pathResolve,
-  ValidatePath,
-};
+  } */

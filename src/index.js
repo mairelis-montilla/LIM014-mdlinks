@@ -2,7 +2,7 @@ const apiMethods = require('./api');
 
 const mdLinks = (pathUser) => {
   const pathAbsolute = apiMethods.pathResolve(pathUser);
-  const ValidatePaths = apiMethods.ValidatePath(pathAbsolute);
+  const validatePaths = apiMethods.ValidatePath(pathAbsolute);
   return console.log('soy el resultado', ValidatePaths);
 };
 
