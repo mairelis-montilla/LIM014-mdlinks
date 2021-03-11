@@ -1,3 +1,4 @@
+const fs = require('fs');
 const apiMethods = require('./api');
 
 const mdLinks = (pathUser) => {
@@ -5,7 +6,12 @@ const mdLinks = (pathUser) => {
   const pathAbsolute = apiMethods.pathResolve(pathUser);
   const validatePaths = apiMethods.validatePath(pathAbsolute);
   if (validatePaths) {
-    console.log('soy los archivos que tiene el directorio', apiMethods.readDir(pathAbsolute));
+    const readDir = apiMethods.readDir(pathAbsolute);
+    const prueba = apiMethods.pathJoin(readDir, pathAbsolute);
+    const prueba2 = prueba.map((elem) => {
+      const stats = fs.statSync(elem);
+      return console.log('soy prueba2', elem, stats.isDirectory());
+    });
   } else {
     console.log(invalidPath);
   }
@@ -13,5 +19,5 @@ const mdLinks = (pathUser) => {
 };
 
 mdLinks('/home/andres/Laboratoria/Practica');
-mdLinks('../Practica12');
+mdLinks('CarpetaInterna');
 module.exports = mdLinks;
