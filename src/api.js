@@ -9,10 +9,23 @@ const isDir = (pathElem) => {
   const stats = fs.statSync(pathElem);
   return stats.isDirectory();
 };
-
 const extnameMd = (dir) => dir.filter((file) => path.extname(file) === '.md');
 
-/* (path.extname(file) === '.md' ? file : path.join(dir, file))); */
+const mdArr = [];
+const getFiles = (pathsDir) => pathsDir.map((elem) => {
+  const pathElem = elem;
+  if (isDir(elem)) {
+    const readElem = readDir(pathElem);
+    if (readElem.length > 0) {
+      const pathsDirElem = pathJoin(readElem, pathElem);
+      getFiles(pathsDirElem);
+    }
+  } else if (path.extname(elem) === '.md') {
+    mdArr.push(elem);
+  }
+  return mdArr;
+});
+
 
 module.exports = {
   pathResolve,
@@ -21,4 +34,5 @@ module.exports = {
   pathJoin,
   extnameMd,
   isDir,
+  getFiles,
 };

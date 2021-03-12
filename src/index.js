@@ -6,11 +6,9 @@ const mdLinks = (pathUser) => {
   const validatePaths = apiMethods.validatePath(pathAbsolute);
   if (validatePaths) {
     const readDir = apiMethods.readDir(pathAbsolute);
-    console.log(readDir);
     const pathsDirFile = apiMethods.pathJoin(readDir, pathAbsolute);
-    
-    const isDirectory = pathsDirFile.filter((file) => apiMethods.isDir(file) === true);
-    console.log('soy is directory', isDirectory);
+    const mdArray = apiMethods.getFiles(pathsDirFile);
+    console.log('SOY LO QUE DEVUELVE GET', mdArray[0]);
   } else {
     console.log(invalidPath);
   }
@@ -21,3 +19,5 @@ const mdLinks = (pathUser) => {
 mdLinks('/home/andres/Laboratoria/Practica');
 mdLinks('CarpetaInterna');
 module.exports = mdLinks;
+/* const isDirectory = pathsDirFile.filter((file) => apiMethods.isDir(file) === true);
+    console.log('soy is directory', isDirectory); */
