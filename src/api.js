@@ -5,7 +5,10 @@ const pathResolve = (paths) => (path.isAbsolute(paths) ? paths : path.resolve(pa
 const validatePath = (pathAbsolute) => fs.existsSync(pathAbsolute);
 const readDir = (pathAbsolute) => fs.readdirSync(pathAbsolute);
 const pathJoin = (dir, pathA) => dir.map((file) => path.join(pathA, file));
-const isFile = (pathElem) => fs.statSync(pathElem);
+const isDir = (pathElem) => {
+  const stats = fs.statSync(pathElem);
+  return stats.isDirectory();
+};
 
 const extnameMd = (dir) => dir.filter((file) => path.extname(file) === '.md');
 
@@ -17,5 +20,5 @@ module.exports = {
   readDir,
   pathJoin,
   extnameMd,
-  isFile,
+  isDir,
 };
