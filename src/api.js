@@ -10,7 +10,7 @@ const isDir = (pathElem) => {
   return stats.isDirectory();
 };
 
-const mdArr = [];
+const listMd = [];
 const getFiles = (pathsDir) => {
   pathsDir.forEach((elem) => {
     const pathElem = elem;
@@ -21,17 +21,46 @@ const getFiles = (pathsDir) => {
         getFiles(pathsDirElem);
       }
     } else if (path.extname(elem) === '.md') {
-      mdArr.push(elem);
+      listMd.push(elem);
     }
   });
-  return mdArr;
+  return listMd;
 };
 
+const readFile = (elem) => fs.readFileSync(elem,
+  { encoding: 'utf-8', flag: 'r' });
+const matchLinks = (file) => {
+  const regexLink = /\[([\w\s\d]+)\]\(((?:\/|https?:\/\/)[\w\d./?=#-&_%~,.:]+)\)/mg;
+  const matching = file.match(regexLink);
+  return matching;
+};
+
+const getLinks = (arrayMd) => {
+  const listlinks = [];
+  arrayMd.forEach((elem) => {
+    const elemPath = elem;
+    const readElem = readFile(elem);
+    const links = matchLinks(readElem);
+    if (links !== null) {
+      links.forEach((link) => {
+        const objectsLinks = {
+          url: link,
+          text: link,
+          file: elemPath,
+        };
+        listlinks.push(objectsLinks);
+      });
+    }
+  });
+  return listlinks;
+};
 module.exports = {
   pathResolve,
   validatePath,
   readDir,
   pathJoin,
-  isDir,
   getFiles,
+  readFile,
+  matchLinks,
+  getLinks,
 };
