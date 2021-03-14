@@ -43,9 +43,12 @@ const getLinks = (arrayMd) => {
     const links = matchLinks(readElem);
     if (links !== null) {
       links.forEach((link) => {
+        const url = link.match(/\(((?:\/|https?:\/\/)[\w\d./?=#-&_%~,.:]+)\)/mg);
+        const text = link.match(/\[([\w\s\d]+)\]/g);
+
         const objectsLinks = {
-          url: link,
-          text: link,
+          url: url.join().slice(1, -1),
+          text: text.join().slice(1, -1),
           file: elemPath,
         };
         listlinks.push(objectsLinks);
