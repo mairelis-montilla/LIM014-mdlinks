@@ -1,6 +1,6 @@
 const apiMethods = require('./api');
 
-const mdLinks = (pathUser, option) => {
+const mdLinks = (pathUser, option = { validate: false }) => {
   const invalidPath = 'invalid path';
   const pathAbsolute = apiMethods.pathResolve(pathUser);
   const validatePaths = apiMethods.validatePath(pathAbsolute);
@@ -8,8 +8,13 @@ const mdLinks = (pathUser, option) => {
     const readDir = apiMethods.readDir(pathAbsolute);
     const pathsDirFile = apiMethods.pathJoin(readDir, pathAbsolute);
     const listMd = apiMethods.getFiles(pathsDirFile);
-    const listLinks = apiMethods.getLinks(listMd);
-    console.log('SOY LO QUE DEVUELVE listLinks', listLinks);
+    if (option.validate === true) {
+      const listLinksValidate = apiMethods.getLinksValidate(listMd);
+      console.log(listLinksValidate);
+    } else {
+      const listLinks = apiMethods.getLinks(listMd);
+      console.log(listLinks);
+    }
   } else {
     console.log(invalidPath);
   }
@@ -17,5 +22,5 @@ const mdLinks = (pathUser, option) => {
 };
 
 mdLinks('/home/andres/Laboratoria/Practica');
-mdLinks('CarpetaInterna');
+mdLinks('/home/andres/Laboratoria/Practica');
 module.exports = mdLinks;
