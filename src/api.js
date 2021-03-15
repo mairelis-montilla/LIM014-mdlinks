@@ -2,6 +2,10 @@ const path = require('path');
 const fs = require('fs');
 const axios = require('axios');
 
+const regexLinkFull = /\[([\w\s\d]+)\]\(((?:\/|https?:\/\/)[\w\d./?=#&_%~,.:-]+)\)/mg;
+const regexLink = /\(((?:\/|https?:\/\/)[\w\d./?=#&_%~,.:-]+)\)/mg;
+const regexText = /\[([\w\s\d]+)\]/g;
+
 const pathResolve = (paths) => (path.isAbsolute(paths) ? paths : path.resolve(paths));
 const validatePath = (pathAbsolute) => fs.existsSync(pathAbsolute);
 const readDir = (pathAbsolute) => fs.readdirSync(pathAbsolute);
@@ -25,9 +29,6 @@ const isFile = (pathsDir, listMd) => {
     }
   });
 };
-const regexLinkFull = /\[([\w\s\d]+)\]\(((?:\/|https?:\/\/)[\w\d./?=#-&_%~,.:]+)\)/mg;
-const regexLink = /\(((?:\/|https?:\/\/)[\w\d./?=#-&_%~,.:]+)\)/mg;
-const regexText = /\[([\w\s\d]+)\]/g;
 const getFiles = (pathsDir) => {
   const listMd = [];
   isFile(pathsDir, listMd);
@@ -46,7 +47,7 @@ const getLinks = (arrayMd) => {
     const elemPath = elem;
     const readElem = readFile(elem);
     const links = matchLinks(readElem);
-    if (links !== null) {
+    if (links) {
       links.forEach((link) => {
         const url = link.match(regexLink).join().slice(1, -1);
         const texts = link.match(regexText).join().slice(1, -1);
@@ -62,14 +63,27 @@ const getLinks = (arrayMd) => {
   });
   return listlinks;
 };
-const getStatus = (href) => axios.get(href)
+const getStatus = ({ url, texts, elemPath }) => axios.get(url)
   .then((response) => {
     const { status } = response;
     const { statusText } = response;
-    return { status, statusText };
+    return {
+      url, texts, elemPath, status, statusText,
+    };
   })
   .catch((error) => {
-    console.log(error);
+    let status;
+    let statusText;
+    if (error.response) {
+      status = error.response.status;
+      statusText = error.response.statusText;
+    } else {
+      status = error.response;
+      statusText = 'fail';
+    }
+    return {
+      status, statusText, url, texts, elemPath,
+    };
   });
 
 const getLinksValidate = (arrayMd) => {
@@ -82,19 +96,15 @@ const getLinksValidate = (arrayMd) => {
       links.forEach((link) => {
         const url = link.match(regexLink).join().slice(1, -1);
         const texts = link.match(regexText).join().slice(1, -1);
-        const statushttp = getStatus(url);
-        const objectsLinks = {
-          href: url,
-          text: texts,
-          file: elemPath,
-          status: statushttp,
-        };
+        const objectsLinks = getStatus({ url, texts, elemPath });
         listlinks.push(objectsLinks);
       });
     }
   });
 
-  return listlinks;
+  return Promise.all(listlinks).then((values) => {
+    console.log(values);
+  });
 };
 
 module.exports = {

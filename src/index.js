@@ -13,7 +13,7 @@ const mdLinks = (pathUser, option = { validate: false }) => {
       console.log(listLinksValidate);
     } else {
       const listLinks = apiMethods.getLinks(listMd);
-      console.log(listLinks);
+      console.log('lista de links', listLinks);
     }
   } else {
     console.log(invalidPath);
@@ -21,6 +21,6 @@ const mdLinks = (pathUser, option = { validate: false }) => {
   // return Promise;
 };
 
-mdLinks('/home/andres/Laboratoria/Practica');
+mdLinks('/home/andres/Laboratoria/Practica', { validate: true });
 mdLinks('/home/andres/Laboratoria/Practica');
 module.exports = mdLinks;
