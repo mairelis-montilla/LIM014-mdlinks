@@ -1,6 +1,6 @@
 const apiMethods = require('./api');
 
-const mdLinks = (pathUser, option = { validate: false }) => {
+const mdLinks = (pathUser, option = { validate: false }) => new Promise((resolve, reject) => {
   const invalidPath = 'invalid path';
   const pathAbsolute = apiMethods.pathResolve(pathUser);
   const validatePaths = apiMethods.validatePath(pathAbsolute);
@@ -8,19 +8,17 @@ const mdLinks = (pathUser, option = { validate: false }) => {
     const readDir = apiMethods.readDir(pathAbsolute);
     const pathsDirFile = apiMethods.pathJoin(readDir, pathAbsolute);
     const listMd = apiMethods.getFiles(pathsDirFile);
-    if (option.validate === true) {
+    if (option.validate) {
       const listLinksValidate = apiMethods.getLinksValidate(listMd);
-      console.log(listLinksValidate);
+      resolve(Promise.all(listLinksValidate).then((values) => console.log(values)));
     } else {
       const listLinks = apiMethods.getLinks(listMd);
-      console.log('lista de links', listLinks);
+      console.log(listLinks);
+      resolve((listLinks));
     }
   } else {
-    console.log(invalidPath);
+    reject(new Error(invalidPath));
   }
-  // return Promise;
-};
-
+});
 mdLinks('/home/andres/Laboratoria/Practica', { validate: true });
-mdLinks('/home/andres/Laboratoria/Practica');
 module.exports = mdLinks;

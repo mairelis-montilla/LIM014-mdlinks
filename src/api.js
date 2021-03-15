@@ -82,12 +82,12 @@ const getStatus = ({ url, texts, elemPath }) => axios.get(url)
       statusText = 'fail';
     }
     return {
-      status, statusText, url, texts, elemPath,
+      url, texts, elemPath, status, statusText,
     };
   });
 
 const getLinksValidate = (arrayMd) => {
-  const listlinks = [];
+  const listLinks = [];
   arrayMd.forEach((elem) => {
     const elemPath = elem;
     const readElem = readFile(elem);
@@ -97,14 +97,12 @@ const getLinksValidate = (arrayMd) => {
         const url = link.match(regexLink).join().slice(1, -1);
         const texts = link.match(regexText).join().slice(1, -1);
         const objectsLinks = getStatus({ url, texts, elemPath });
-        listlinks.push(objectsLinks);
+        listLinks.push(objectsLinks);
       });
     }
   });
 
-  return Promise.all(listlinks).then((values) => {
-    console.log(values);
-  });
+  return (listLinks);
 };
 
 module.exports = {
