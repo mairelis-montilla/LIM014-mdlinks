@@ -13,8 +13,7 @@ const mdLinks = (pathUser, option = { validate: false }) => new Promise((resolve
       resolve(Promise.all(listLinksValidate).then((values) => console.log(values)));
     } else {
       const listLinks = apiMethods.getLinks(listMd);
-      console.log(listLinks);
-      resolve((listLinks));
+      resolve(console.log(listLinks));
     }
   } else {
     reject(new Error(invalidPath));
