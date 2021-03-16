@@ -7,9 +7,11 @@ const mdLinks = (pathUser, option = { validate: false }) => new Promise((resolve
   if (validatePaths) {
     const readDir = apiMethods.readDir(pathAbsolute);
     const pathsDirFile = apiMethods.pathJoin(readDir, pathAbsolute);
+    console.log('este es path dir', pathsDirFile);
     const listMd = apiMethods.getFiles(pathsDirFile);
     if (option.validate) {
       const listLinksValidate = apiMethods.getLinksValidate(listMd);
+      console.log(listLinksValidate);
       resolve(Promise.all(listLinksValidate).then((values) => console.log(values)));
     } else {
       const listLinks = apiMethods.getLinks(listMd);
